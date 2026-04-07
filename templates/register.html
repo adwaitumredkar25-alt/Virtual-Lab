@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Virtual Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=8">
+</head>
+
+<body>
+    <div id="math-background" class="math-background"></div>
+    
+    <div class="top-nav">
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='college_logo.png') }}" class="nav-logo" alt="College Logo">
+            <span class="nav-title" style="margin-right: 1.5rem;">Virtual <span class="gradient-text">Lab</span></span>
+        </div>
+        <div class="nav-right">
+        </div>
+    </div>
+
+    <div class="app-container register-container" style="max-width: 600px; padding-top: 2rem;">
+        <div class="login-card">
+            <h2>Create <span class="gradient-text">Account</span></h2>
+            <p class="subtitle" style="margin-bottom: 2rem;">Start your virtual chemistry journey</p>
+            
+            {% if error %}
+            <div class="feedback-error" style="margin-bottom: 1rem;">{{ error }}</div>
+            {% endif %}
+
+            {% if success %}
+            <div class="feedback-success" style="margin-bottom: 1rem; color: #10b981;">{{ success }}</div>
+            <p class="subtitle" style="text-align: center;"><a href="{{ url_for('login') }}" class="gradient-text" style="font-weight: 600; text-decoration: none;">Proceed to Login</a></p>
+            {% else %}
+            <form action="{{ url_for('register') }}" method="POST">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Register</button>
+            </form>
+            <p class="subtitle" style="margin-top: 1.5rem; text-align: center;">Already have an account? <a href="{{ url_for('login') }}" class="gradient-text" style="font-weight: 600; text-decoration: none;">Login</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Theme Switcher floating at bottom right -->
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round">
+                <span class="theme-text">Dark</span>
+                <span class="theme-text">Light</span>
+            </div>
+        </label>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=17"></script>
+</body>
+</html>

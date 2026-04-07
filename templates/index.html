@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=8">
+</head>
+
+<body>
+    <div id="math-background" class="math-background"></div>
+    <div class="top-nav">
+        <div class="nav-left">
+            <img src="{{ url_for('static', filename='college_logo.png') }}" class="nav-logo" alt="College Logo">
+            <span class="nav-title" style="margin-right: 1.5rem;">Virtual <span class="gradient-text">Lab</span></span>
+
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-avatar-btn" title="Menu">
+                    {% if profile_pic %}
+                        <img src="{{ url_for('static', filename=profile_pic) }}?v={{ range(1000, 9999) | random }}" alt="Profile">
+                    {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                    {% endif %}
+                </button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="app-container">
+        <header>
+            <p class="subtitle" style="font-size: 1.3rem; margin-top: 1rem;">Vectors, Matrices, Rank, & Relations</p>
+            <div class="score-pill" id="score-display">
+                Marks: <span id="marks-value">0</span>
+            </div>
+        </header>
+        <main id="main-content">
+            <!-- Step 1: Initial Configuration -->
+            <section id="step-config" class="step-card active">
+                <div class="step-header">
+                    <div class="step-number">01</div>
+                    <h2>Vector Configuration</h2>
+                </div>
+                <div class="step-body">
+                    <div class="input-group">
+                        <label for="num-vectors">Number of Vectors (k)</label>
+                        <input type="number" id="num-vectors" min="1" placeholder="e.g. 3">
+                    </div>
+                    <div class="input-group">
+                        <label for="len-vectors">Length of Vectors (n)</label>
+                        <input type="number" id="len-vectors" min="1" placeholder="e.g. 3">
+                    </div>
+                </div>
+                <div class="step-footer">
+                    <button id="btn-start-vectors" class="btn-primary">Start
+                        Vectors</button>
+                </div>
+            </section>
+            <!-- Step 2: Vector Input -->
+            <section id="step-vectors" class="step-card hidden">
+                <div class="step-header">
+                    <div class="step-number">02</div>
+                    <h2>Enter Vectors</h2>
+                </div>
+                <p class="instruction">Enter the components for each vector
+                    below.</p>
+                <div id="vector-inputs-container" class="dynamic-inputs"></div>
+                <div class="step-footer">
+                    <button id="btn-submit-vectors" class="btn-primary">Submit
+                        Vectors</button>
+                </div>
+            </section>
+            <!-- Step 3: Matrix Construction -->
+            <section id="step-matrix" class="step-card hidden">
+                <div class="step-header">
+                    <div class="step-number">03</div>
+                    <h2>Construct Matrix A</h2>
+                </div>
+                <p class="instruction">Enter Matrix A where each <strong>vector is
+                        a column</strong>.</p>
+                <div id="matrix-input-container" class="matrix-grid"></div>
+                <div class="feedback-area" id="matrix-feedback"></div>
+                <div class="step-footer">
+                    <button id="btn-check-matrix" class="btn-primary">Check
+                        Matrix</button>
+                    <button class="btn-secondary btn-next-slide" data-next="step-rank">Next Slide &rarr;</button>
+                </div>
+            </section>
+            <!-- Step 4: Rank Input -->
+            <section id="step-rank" class="step-card hidden">
+                <div class="step-header">
+                    <div class="step-number">04</div>
+                    <h2>Determine Rank</h2>
+                </div>
+                <p class="instruction">Calculate the rank of Matrix A.</p>
+                <div class="input-group">
+                    <label for="input-rank">Rank of A:</label>
+                    <input type="number" id="input-rank" min="0">
+                </div>
+                <div class="feedback-area" id="rank-feedback"></div>
+                <div class="step-footer">
+                    <button id="btn-check-rank" class="btn-primary">Check
+                        Rank</button>
+                    <button class="btn-secondary btn-next-slide" data-next="step-independence">Next Slide &rarr;</button>
+                </div>
+            </section>
+            <!-- Step 5: Independence Check -->
+            <section id="step-independence" class="step-card hidden">
+                <div class="step-header">
+                    <div class="step-number">05</div>
+                    <h2>Linear Independence</h2>
+                </div>
+                <p class="instruction">Based on the rank, are the vectors Linearly
+                    Independent or Dependent?</p>
+                <div class="choice-container">
+                    <button class="choice-btn" data-choice="I">
+                        <span class="icon">I</span>
+                        <span class="label">Linearly Independent</span>
+                    </button>
+                    <button class="choice-btn" data-choice="D">
+                        <span class="icon">D</span>
+                        <span class="label">Linearly Dependent</span>
+                    </button>
+                </div>
+                <div class="feedback-area" id="indep-feedback"></div>
+                <div class="step-footer">
+                    <button id="btn-next-relation" class="btn-secondary btn-next-slide hidden" data-next="step-relation">Next Slide &rarr;</button>
+                </div>
+            </section>
+            <!-- Step 6: Relation (if needed) -->
+            <section id="step-relation" class="step-card hidden">
+                <div class="step-header">
+                    <div class="step-number">06</div>
+                    <h2>Linear Relation</h2>
+                </div>
+                <p class="instruction">
+                    These vectors are linearly dependent, meaning they
+                    "redundantly" cover directions.
+                    <br><br>
+                    <strong>Goal:</strong> Find a weighted combination of these
+                    vectors that equals the zero vector.
+                    <br>
+                    <span style="font-size: 0.95em; opacity: 0.9; display: block;
+margin-top: 5px;">
+                        Find numbers <em>c<sub>1</sub></em>, ...,
+                        <em>c<sub>k</sub></em> (not all zero) such that:
+                        <br>
+                        <strong>c<sub>1</sub>v<sub>1</sub> +
+                            c<sub>2</sub>v<sub>2</sub> + ... +
+                            c<sub>k</sub>v<sub>k</sub> = 0</strong>
+                    </span>
+                </p>
+                <div id="relation-inputs-container" class="relation-row"></div>
+                <div class="feedback-area" id="relation-feedback"></div>
+                <div class="step-footer">
+                    <button id="btn-check-relation" class="btn-primary">Check
+                        Relation</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <!-- Theme Switcher floating at bottom right -->
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" />
+            <div class="slider round">
+                <span class="theme-text">Dark</span>
+                <span class="theme-text">Light</span>
+            </div>
+        </label>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=17"></script>
+</body>
+
+</html>
